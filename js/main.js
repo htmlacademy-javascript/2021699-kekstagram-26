@@ -1,24 +1,3 @@
-const getrandomInteger = (min, max) => {
-  if (min < 0 && max < 0 && min > max) {
-    throw new RangeError('Переданы некорректные параметры');
-  }
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-getrandomInteger(1, 10);
-
-const checkLength = (line, maxLength) => {
-  if (line.length >= maxLength) {
-    return false;
-  }
-  return true;
-};
-checkLength('2570920', 140);
-
-
-const getRandomArrayElement = (elements) => {
-  return elements[getrandomInteger(0, elements.length - 1)];
-};
-
 const DESCRIPTION = [
   'Сегодня Солнцестояние',
   'С понедельника начну',
@@ -39,47 +18,56 @@ const MESSAGES = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
 ];
 
+const MAX_NUMBERS_PHOTO = 25;
+const MAX_NUMBERS_COMMENT = 5;
 
-const createPhoto = (id) => {
-  return {
-    id,
-    url: '',
-    description: '',
-    likes: '',
-    comments: '',
+const getRandomInteger = (min, max) => {
+  if (min < 0 && max < 0 && min > max) {
+    throw new RangeError('Переданы некорректные параметры');
   }
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+// eslint-disable-next-line
+const checkLength = (line, maxLength) => {
+  if (line.length >= maxLength) {
+    return false;
+  }
+  return true;
+};
+
+
+const getRandomArrayElement = (elements) =>  elements[getRandomInteger(0, elements.length - 1)];
+
 const createComments = (countComment) => {
-  const COMMENTSPHOTO = [];
-  for (let i=1; i <= countComment; i++) {
-    COMMENTSPHOTO.push({
+  const comments = [];
+
+  for (let i = 1; i <= countComment; i++) {
+    comments.push({
       id: i,
-      avatar: `img/avatar-${getrandomInteger(1, 6)}.svg`,
+      avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
       message: getRandomArrayElement(MESSAGES),
       name: getRandomArrayElement(NAMES),
     });
   }
-  return COMMENTSPHOTO;
+
+  return comments;
 };
-const MAX_NUMBERS_COMMENT = 5;
-const comment = createComments( MAX_NUMBERS_COMMENT);
 
 const generatePhotos = (count) => {
-  const PHOTOS = [];
-  for (let i=1; i <= count; i++) {
-    PHOTOS.push({
+  const photos = [];
+
+  for (let i = 1; i <= count; i++) {
+    photos.push({
       id: i,
       url: `photos/${i}.jpg`,
       description: getRandomArrayElement(DESCRIPTION),
-      likes: getrandomInteger(15, 200),
-      comments:  getRandomArrayElement(comment),
+      likes: getRandomInteger(15, 200),
+      comments: createComments(getRandomInteger(0, MAX_NUMBERS_COMMENT)),
     });
   }
-  return PHOTOS;
+
+  return photos;
 };
 
-const MAX_NUMBERS_PHOTO = 25;
-const photo = generatePhotos(MAX_NUMBERS_PHOTO);
-photo ();
-
+generatePhotos(MAX_NUMBERS_PHOTO);
