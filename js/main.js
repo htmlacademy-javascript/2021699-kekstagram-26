@@ -1,15 +1,73 @@
-const getrandomInteger = (min, max) => {
-  if (min < 0 && max < 0 && min > max){
+const DESCRIPTION = [
+  'Сегодня Солнцестояние',
+  'С понедельника начну',
+  'Около Чаши',
+  'Первый шаг к мечте',
+  'Счастье не за горами',
+];
+
+const NAMES = [
+  'Пересвет',
+  'Сафина',
+  'Раян',
+  'Рустам Нургалиевич',
+];
+
+const MESSAGES = [
+  'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
+  'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
+];
+
+const MAX_NUMBERS_PHOTO = 25;
+const MAX_NUMBERS_COMMENT = 5;
+
+const getRandomInteger = (min, max) => {
+  if (min < 0 && max < 0 && min > max) {
     throw new RangeError('Переданы некорректные параметры');
   }
-  return Math.floor(Math.random() * (max - min + 1) ) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
-getrandomInteger(1, 10);
 
+// eslint-disable-next-line
 const checkLength = (line, maxLength) => {
-  if (line.length >= maxLength){
+  if (line.length >= maxLength) {
     return false;
   }
   return true;
 };
-checkLength('2570920', 140);
+
+
+const getRandomArrayElement = (elements) =>  elements[getRandomInteger(0, elements.length - 1)];
+
+const createComments = (countComment) => {
+  const comments = [];
+
+  for (let i = 1; i <= countComment; i++) {
+    comments.push({
+      id: i,
+      avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
+      message: getRandomArrayElement(MESSAGES),
+      name: getRandomArrayElement(NAMES),
+    });
+  }
+
+  return comments;
+};
+
+const generatePhotos = (count) => {
+  const photos = [];
+
+  for (let i = 1; i <= count; i++) {
+    photos.push({
+      id: i,
+      url: `photos/${i}.jpg`,
+      description: getRandomArrayElement(DESCRIPTION),
+      likes: getRandomInteger(15, 200),
+      comments: createComments(getRandomInteger(0, MAX_NUMBERS_COMMENT)),
+    });
+  }
+
+  return photos;
+};
+
+generatePhotos(MAX_NUMBERS_PHOTO);
