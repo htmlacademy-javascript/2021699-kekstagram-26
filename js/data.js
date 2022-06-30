@@ -1,5 +1,4 @@
-import {getRandomArrayElement} from './util.js';
-import {getRandomInteger} from './util.js';
+import {getRandomArrayElement, getRandomInteger} from './util.js';
 
 const DESCRIPTION = [
   'Сегодня Солнцестояние',
