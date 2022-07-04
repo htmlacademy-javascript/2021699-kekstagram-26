@@ -65,3 +65,4 @@ const generatePhotos = (count) => {
 generatePhotos(MAX_NUMBERS_PHOTO);
 
 export {generatePhotos};
+export {NAMES};
