@@ -31,7 +31,7 @@ const checkLength = (line, maxLength) => {
   return true;
 };
 
-const createComments = (countComment) => {
+const generateComments = (countComment) => {
   const comments = [];
 
   for (let i = 1; i <= countComment; i++) {
@@ -55,7 +55,7 @@ const generatePhotos = (count) => {
       url: `photos/${i}.jpg`,
       description: getRandomArrayElement(DESCRIPTION),
       likes: getRandomInteger(15, 200),
-      comments: createComments(getRandomInteger(0, MAX_NUMBERS_COMMENT)),
+      comments: generateComments(getRandomInteger(0, MAX_NUMBERS_COMMENT)),
     });
   }
 
@@ -64,4 +64,6 @@ const generatePhotos = (count) => {
 
 generatePhotos(MAX_NUMBERS_PHOTO);
 
-export {generatePhotos};
+export {generatePhotos, generateComments};
+export {NAMES};
+
