@@ -1,16 +1,15 @@
-import {body} from './render-picture.js';
-
 const popup = document.querySelector('.big-picture');
+const ESC_BTN_CODE = 27;
 
-popup.addEventListener('click', () => {
+const closeModal = () => {
   popup.classList.add('hidden');
-  body.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
+};
+popup.addEventListener('click', closeModal);
 
-});
 
 document.addEventListener('keydown', (evt) => {
-  if (evt.keyCode === 27) {
-    popup.classList.add('hidden');
-    body.classList.remove('modal-open');
+  if (evt.keyCode === ESC_BTN_CODE) {
+    closeModal();
   }
 });

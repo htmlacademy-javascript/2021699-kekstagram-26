@@ -31,8 +31,16 @@ const renderPictures = (pictures) => {
       popup.querySelector('.likes-count').textContent = photo.likes;
       popup.querySelector('.comments-count').textContent = photo.comments.length;
 
+      //Комменты
       // Удаляем комментарии,которые были
       popup.querySelector('.social__comments').innerHTML = '';
+
+      //массив готовых комментов
+      const commentsPhoto = creatComments(photo.comments);
+
+      commentsPhoto.forEach((item) => {
+        popup.querySelector('.social__comments').append(item);
+      });
     });
   });
   pictureListElement.appendChild(pictureListFragment);
@@ -40,38 +48,34 @@ const renderPictures = (pictures) => {
 
 
 // функция создания коммента
-function creatComments(comment){
+function creatComments(comments){
+// массив готовых комментов
+  const commentsArray = [];
 
+  comments.forEach((comment) => {
   // создаем лишку
-  const oneComment = document.createElement('li');
-  oneComment.classList.add('social__comment');
-  // commentList.appendChild(oneComment);
+    const oneComment = document.createElement('li');
+    oneComment.classList.add('social__comment');
 
-  // картинка
-  const oneImg = document.createElement('img');
-  oneImg.classList.add('social__picture');
-  oneImg.src=comment.avatar;
-  oneImg.alt=comment.name;
-  oneComment.appendChild(oneImg);
+    // картинка
+    const oneImg = document.createElement('img');
+    oneImg.classList.add('social__picture');
+    oneImg.src = comment.avatar;
+    oneImg.alt = comment.name;
+    oneComment.appendChild(oneImg);
 
 
-  // добавляем абзац
-  const commentText = document.createElement('p');
-  commentText.classList.add('social__text');
-  commentText.textContent = comment.message;
-  oneComment.appendChild(commentText);
+    // добавляем абзац
+    const commentText = document.createElement('p');
+    commentText.classList.add('social__text');
+    commentText.textContent = comment.message;
+    oneComment.appendChild(commentText);
+    // готовый  комментарий кладем в массив
+    commentsArray.push(oneComment);
+  });
 
-  return oneComment;
+
+  return commentsArray;
 }
 
-// перебор коллекции элементов
-const commentList = document.querySelector('.social__comments');
-for (let i = 0; i < commentList.length; i++) {
-  const cardItem = commentList[i];
-  commentList.appendChild(cardItem);
-}
-
-
-creatComments(commentList);
-
-export {renderPictures, body};
+export {renderPictures};
