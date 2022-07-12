@@ -57,6 +57,7 @@
               id="upload-select-image"
               method="post"
               enctype="multipart/form-data"
+              action="https://26.javascript.pages.academy/kekstagram"
               autocomplete="off"
             >
               <!-- Изначальное состояние поля для загрузки изображения -->
@@ -240,12 +241,14 @@
                         class="text__hashtags"
                         name="hashtags"
                         placeholder="#ХэшТег"
+                        type="text"
                       />
                     </div>
                     <div class="img-upload__field-wrapper">
                       <textarea
                         class="text__description"
                         name="description"
+                        type="text"
                         placeholder="Ваш комментарий..."
                       ></textarea>
                     </div>
@@ -347,6 +350,8 @@
               <input
                 type="text"
                 class="social__footer-text"
+                maxlength="140"
+                name="user-comment"
                 placeholder="Ваш комментарий..."
               />
               <button type="button" class="social__footer-btn" name="button">

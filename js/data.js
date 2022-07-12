@@ -65,5 +65,3 @@ const generatePhotos = (count) => {
 generatePhotos(MAX_NUMBERS_PHOTO);
 
 export {generatePhotos, generateComments};
-export {NAMES};
-
