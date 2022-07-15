@@ -2,27 +2,27 @@ const popup = document.querySelector('.big-picture');
 const commentCount = document.querySelector('.social__comment-count');
 const commentsLoader = document.querySelector('.social__comments-loader');
 const commentsContainer = popup.querySelector('.social__comments');
-const bigPictureCloseButton = popup.querySelector('#picture-cancel');
+const CloseButton = popup.querySelector('#picture-cancel');
 
 
 const closeModal = () => {
   popup.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeyDown);
-  document.removeEventListener('click', modalCloseButton);
+  CloseButton.removeEventListener('click', onCloseButtonClick);
 };
 
 const openModal = () => {
   popup.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeyDown);
-  document.addEventListener('click', modalCloseButton);
+  CloseButton.addEventListener('click', onCloseButtonClick);
 };
 
-function modalCloseButton () {
-  bigPictureCloseButton.onclick = closeModal;
-}
-
+function onCloseButtonClick () {
+  closeModal();
+  document.addEventListener('click', modalCloseButton);
+};
 
 function onDocumentKeyDown (evt) {
   if (evt.key === 'Escape') {
@@ -30,7 +30,7 @@ function onDocumentKeyDown (evt) {
   }
 }
 
-const creatComment = (comment) =>{
+const createComment = (comment) =>{
   const oneComment = document.createElement('li');
   oneComment.classList.add('social__comment');
   // картинка
@@ -49,11 +49,11 @@ const creatComment = (comment) =>{
   return oneComment;
 };
 
-const creatComments = (comments) => {
+const createComments = (comments) => {
   const fragment = document.createDocumentFragment();
 
   comments.forEach((comment) => {
-    const renderedComment = creatComment(comment);
+    const renderedComment = createComment(comment);
     fragment.appendChild(renderedComment);
   });
 
@@ -77,7 +77,7 @@ const renderBigPicture = (photo) => {
   // Удаляем комментарии,которые были
   popup.querySelector('.social__comments').innerHTML = '';
   //массив готовых комментов
-  const commentsPhoto = creatComments(photo.comments);
+  const commentsPhoto = createComments(photo.comments);
   commentsContainer.appendChild(commentsPhoto);
 };
 
