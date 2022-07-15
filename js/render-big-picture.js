@@ -21,8 +21,8 @@ const openModal = () => {
 
 function onCloseButtonClick () {
   closeModal();
-}
-
+  document.addEventListener('click', modalCloseButton);
+};
 
 function onDocumentKeyDown (evt) {
   if (evt.key === 'Escape') {
