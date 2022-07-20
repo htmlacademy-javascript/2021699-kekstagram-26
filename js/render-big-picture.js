@@ -1,27 +1,22 @@
 const popup = document.querySelector('.big-picture');
-const commentCount = document.querySelector('.social__comment-count');
-const commentsLoader = document.querySelector('.social__comments-loader');
+// const commentCount = document.querySelector('.social__comment-count');
+// const commentsLoader = document.querySelector('.social__comments-loader');
 const commentsContainer = popup.querySelector('.social__comments');
-const CloseButton = popup.querySelector('#picture-cancel');
+const сloseButton = popup.querySelector('#picture-cancel');
+const uploadButton = popup.querySelector('.comments-loader');
 
 
 const closeModal = () => {
   popup.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeyDown);
-  CloseButton.removeEventListener('click', onCloseButtonClick);
 };
 
 const openModal = () => {
   popup.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeyDown);
-  CloseButton.addEventListener('click', onCloseButtonClick);
-};
-
-function onCloseButtonClick () {
-  closeModal();
-  document.addEventListener('click', modalCloseButton);
+  сloseButton.addEventListener('click', () => closeModal());
 };
 
 function onDocumentKeyDown (evt) {
@@ -63,9 +58,8 @@ const createComments = (comments) => {
 const renderBigPicture = (photo) => {
 
   openModal();
-
-  commentCount.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
+  // commentCount.classList.add('hidden');
+  // commentsLoader.classList.add('hidden');
 
   // Картинка модалки
   popup.querySelector('.big-picture__img img').src = photo.url;
@@ -77,8 +71,50 @@ const renderBigPicture = (photo) => {
   // Удаляем комментарии,которые были
   popup.querySelector('.social__comments').innerHTML = '';
   //массив готовых комментов
-  const commentsPhoto = createComments(photo.comments);
-  commentsContainer.appendChild(commentsPhoto);
+  // let commentsPhoto = createComments(photo.comments);
+
+  let displayedComments = 5;
+  const totalcomments = photo.comments.length;
+
+  uploadButton.addEventListener('click', () => {
+    if(displayedComments !== totalcomments){
+      displayedComments+= 5;
+      let photoComments = displaysCertainNumberComments();
+      let partComments = createComments(photoComments);
+      commentsContainer.appendChild(partComments);
+    }else {uploadButton.classList.add('hidden');}
+
+  });
+
+
+  function displaysCertainNumberComments (){
+    return photo.comments.slice(0, displayedComments);
+  }
+
+  let photoComments = displaysCertainNumberComments();
+  let partComments = createComments(photo.comments);
+  commentsContainer.appendChild(partComments);
 };
+
+//   const displaysCertainNumberComments = (comments) => {
+//     const commentsPhoto = createComments(photo.comments);
+//     let displayedComments = 5;
+//     const totalcomments = commentsPhoto.length;
+//     const minNumberComments = 5;
+//     if(totalcomments <= minNumberComments){
+//       return commentsPhoto.slice(0, displayedComments);
+//     } else {
+//       const uploadButton = popup.querySelector('.comments-loader');
+//       uploadButton.addEventListener('click', () => {
+//         if(displayedComments !== totalcomments){
+//           displayedComments+= 5;
+//           commentsPhoto.slice(0, displayedComments);
+//         } else{uploadButton.classList.add('hidden');}
+//       });
+//     }
+//   };
+//   const partComments = displaysCertainNumberComments(commentsPhoto);
+//   commentsContainer.appendChild(partComments);
+// };
 
 export {renderBigPicture};
