@@ -21,7 +21,7 @@ const MESSAGES = [
 ];
 
 const MAX_NUMBERS_PHOTO = 25;
-const MAX_NUMBERS_COMMENT = 5;
+const MAX_NUMBERS_COMMENT = 15;
 
 // eslint-disable-next-line
 const checkLength = (line, maxLength) => {
