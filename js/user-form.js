@@ -1,3 +1,5 @@
+import {scaleControlPhoto, checkoutEffects, resetScale} from './slider.js';
+
 const fileUploadControl = document.querySelector('#upload-file');
 const form = document.querySelector('.img-upload__form');
 const formOverlay = document.querySelector('.img-upload__overlay');
@@ -32,12 +34,15 @@ const closeForm = () => {
   formOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onFormKeyDown);
+  resetScale();
 };
 
 function openForm () {
   formOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onFormKeyDown);
+  scaleControlPhoto();
+  checkoutEffects();
 }
 
 function onFormKeyDown (evt) {

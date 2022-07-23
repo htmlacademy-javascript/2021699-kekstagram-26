@@ -82,7 +82,7 @@ const renderBigPicture = (photo) => {
       let partComments = createComments(photoComments);
       commentsContainer.appendChild(partComments);
     }
-
+    op();
     uploadButton.addEventListener('click', () => {
       displayedComments += 5;
       if(displayedComments !== totalcomments){
@@ -96,7 +96,7 @@ const renderBigPicture = (photo) => {
   function displaysCertainNumberComments (){
     return photo.comments.slice(0, displayedComments);
   }
-  op();
+
   let photoComments = displaysCertainNumberComments();
   let partComments = createComments(photoComments);
   commentsContainer.appendChild(partComments);
