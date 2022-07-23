@@ -52,10 +52,7 @@ function onformCloseButton () {
 
 const findDuplicatesHashtags = (value) => {
   const set = new Set(value);
-  if(value.length === set.size){
-    return true;
-  }
-  return false;
+  return value.length === set.size;
 };
 
 
@@ -86,7 +83,7 @@ const initValidation = () => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
-    if(isValid) {
+    if (isValid) {
       return true;
     }
   });
