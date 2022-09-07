@@ -1,4 +1,6 @@
-import {scaleControlPhoto, checkoutEffects, resetScale} from './slider.js';
+import { sendData } from './api.js';
+import { scaleControlPhoto, checkoutEffects, resetScale } from './slider.js';
+import { showAlert } from './util.js';
 
 const fileUploadControl = document.querySelector('#upload-file');
 const form = document.querySelector('.img-upload__form');
@@ -6,7 +8,7 @@ const formOverlay = document.querySelector('.img-upload__overlay');
 const formCloseButton = form.querySelector('#upload-cancel');
 const hashtagsInput = form.querySelector('#hashtags');
 const description = formOverlay.querySelector('.text__description');
-
+const submitButton =  form.querySelector('#upload-submit');
 
 const  maxSymbolsComment = 140;
 const maxNumbersHashtags = 5;
@@ -84,14 +86,69 @@ const initValidation = () => {
   pristine.addValidator(description,
     validateComment,
     commentError.COUNT);
+};
 
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Сохраняю...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Сохранить';
+};
+
+const onSuccessMessage = () => {
+  const successTemplate = document.querySelector('#success').content.querySelector('.success');
+  const successElement = successTemplate.cloneNode(true);
+  document.body.append(successElement);
+
+  successElement.addEventListener('click', () => successElement.remove());
+  document.addEventListener('keydown',  (evt) =>{
+    if (evt.key === 'Escape') {
+      successElement.remove();
+    }
+  }
+  );
+};
+
+const onFailMessage = () => {
+  const failTemplate = document.querySelector('#error').content.querySelector('.error');
+  const failElement = failTemplate.cloneNode(true);
+  document.body.append(failElement);
+
+  failElement.addEventListener('click', () => failElement.remove());
+  document.addEventListener('keydown',  (evt) =>{
+    if (evt.key === 'Escape') {
+      failElement.remove();
+    }
+  }
+  );
+};
+const setUserFormSubmit = (onSuccess) => {
   form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
     const isValid = pristine.validate();
-    if (isValid) {
-      return true;
+    evt.preventDefault();
+    if(isValid){
+      evt.preventDefault();
+      blockSubmitButton();
+      sendData(
+        () => {
+          onSuccess();
+          unblockSubmitButton();
+          onSuccessMessage();
+        },
+        () => {
+          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+          onFailMessage();
+          unblockSubmitButton();
+        },
+        new FormData(evt.target),
+      );
     }
   });
 };
+setUserFormSubmit(closeForm);
 
 export {initValidation};

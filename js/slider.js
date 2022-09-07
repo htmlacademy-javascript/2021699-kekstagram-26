@@ -1,4 +1,4 @@
-const form=  document.querySelector('.img-upload__form');
+const form =  document.querySelector('.img-upload__form');
 const previewImg = form.querySelector('.img-upload__preview img');
 const scalePositive = form.querySelector('.scale__control--bigger');
 const scaleNegative = form.querySelector('.scale__control--smaller');

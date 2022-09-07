@@ -102,4 +102,4 @@ const renderBigPicture = (photo) => {
   commentsContainer.appendChild(partComments);
 };
 
-export {renderBigPicture};
+export {renderBigPicture, closeModal};
