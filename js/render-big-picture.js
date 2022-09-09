@@ -61,7 +61,8 @@ const renderBigPicture = (photo) => {
 
 
   // Картинка модалки
-  popup.querySelector('.big-picture__img img').src = photo.url;
+  popup.querySelector('.big-picture__img').querySelector('img').src = photo.url;
+  console.log(photo.url);
   popup.querySelector('.social__caption').textContent = photo.description;
   popup.querySelector('.likes-count').textContent = photo.likes;
   popup.querySelector('.comments-count').textContent = photo.comments.length;
