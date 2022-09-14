@@ -1,8 +1,12 @@
+const API_URL = 'https://26.javascript.pages.academy/kekstagram';
+const sendErrorMessage = 'Не удалось загрузить. Попробуйте снова';
+const getErrorMessage = 'Не удалось загрузить фотографии';
+
 const getData = (onSuccess, onFail) => {
-  fetch('https://26.javascript.pages.academy/kekstagram/data')
+  fetch(`${API_URL}/data`)
     .then((response) => {
       if (!response.ok) {
-        throw new Error('Не удалось загрузить фотографии');
+        throw new Error(getErrorMessage);
       }
       return response.json();
     })
@@ -17,7 +21,7 @@ const getData = (onSuccess, onFail) => {
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(
-    'https://26.javascript.pages.academy/kekstagram',
+    `${API_URL}`,
     {
       method: 'POST',
       body,
@@ -25,7 +29,7 @@ const sendData = (onSuccess, onFail, body) => {
   )
     .then((response) => {
       if (!response.ok) {
-        throw new Error('Не удалось загрузить. Попробуйте снова');
+        throw new Error(sendErrorMessage);
       }
       onSuccess();
     })

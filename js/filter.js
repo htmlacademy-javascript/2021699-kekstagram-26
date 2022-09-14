@@ -1,66 +1,67 @@
+import {renderPictures} from './render-picture.js';
+import { debounce } from './util.js';
+
+const filterElement = document.querySelector('.img-filters');
+const filterButtons = filterElement.querySelectorAll('.img-filters__button');
+
+const NUMBER_OF_RANDOM_PHOTOS = 10;
 
 
-// import {renderPictures} from './render-picture.js';
-// // import { renderBigPicture } from './render-big-picture.js';
-// import { debounce } from './util.js';
+const clearMiniaturesList = () => {
+  const pictureListElement = document.querySelectorAll('.picture');
+  pictureListElement.forEach((image) => {
+    image.remove();
+  });
+};
+
+const filterPicturesRandom = (data) => data.slice().sort(() => Math.random() - 0.5).slice(0, NUMBER_OF_RANDOM_PHOTOS);
+
+const filterPicturesByDiscussed = (data) =>data.slice().sort((a, b) => b.comments.length - a.comments.length);
 
 
-// const filterElement = document.querySelector('.img-filters');
-// const filterButtons = filterElement.querySelectorAll('.img-filters__button');
-// const NUMBER_OF_RANDOM_PHOTOS = 10;
-// const RENDER_DELAY = 500;
+const onFilterChange = (evt, data) => {
+  const target = evt.target;
 
-// const clearMiniaturesList = () => {
-//   const pictureListElement = document.querySelectorAll('.pictures');
-//   pictureListElement.forEach((image) => {
-//     image.remove();
-//   });
-// };
-
-// const filterPicturesRandom = (data) => {
-//   const filteredPhotosRandom = data.slice().sort(() => Math.random() - 0.5).slice(0, NUMBER_OF_RANDOM_PHOTOS);
-//   renderPictures(filteredPhotosRandom);
-// };
-
-// const filterPicturesByDiscussed = (data) => {
-//   const filteredPhotosDiscussed = data.slice().sort((a, b) => b.comments.length - a.comments.length);
-//   renderPictures(filteredPhotosDiscussed);
-// };
-
-// const getSelectsFilter = (button, data) => {
-//   filterButtons.forEach((buttonFilter) => {
-//     buttonFilter.classList.remove('img-filters__button--active');
-//   });
-//   button.classList.add('img-filters__button--active');
-
-//   switch (button.id) {
-//     case 'filter-random':
-//       clearMiniaturesList();
-//       filterPicturesRandom(data);
-//       break;
-//     case 'filter-discussed':
-//       clearMiniaturesList();
-//       filterPicturesByDiscussed(data);
-//       break;
-//     default:
-//       clearMiniaturesList();
-//       renderPictures(data);
-//       break;
-//   }
-// };
-
-// const filterPictures = (data) => {
-//   renderPictures(data);
-//   filterElement.classList.remove('img-filters--inactive');
-//   filterButtons.forEach((buttonFilter) => {
-//     const debounceCallback = debounce(
-//       () => getSelectsFilter(buttonFilter, data),
-//       RENDER_DELAY,
-//     );
-//     buttonFilter.addEventListener('click', debounceCallback);
-//   });
-// };
-
-// export {filterPictures};
+  if (!target.id) {
+    return;
+  }
 
 
+  if (target.classList.contains('img-filters__button--active')) {
+    return;
+  }
+
+  filterButtons.forEach((buttonFilter) => {
+    buttonFilter.classList.remove('img-filters__button--active');
+  });
+  target.classList.add('img-filters__button--active');
+
+  let currentsPhoto;
+
+  switch (target.id) {
+    case 'filter-random':
+      currentsPhoto = filterPicturesRandom(data);
+      break;
+    case 'filter-discussed':
+      currentsPhoto = filterPicturesByDiscussed(data);
+      break;
+    case 'filter-default':
+      currentsPhoto = data;
+      break;
+    default:
+      throw new Error (`Unknow filter button id: ${target.id}`);
+  }
+
+  clearMiniaturesList();
+  renderPictures(currentsPhoto);
+};
+
+const renderApp = (data) => {
+  renderPictures(data);
+  filterElement.classList.remove('img-filters--inactive');
+
+  filterElement.addEventListener('click', debounce((evt) => (onFilterChange(evt, data))));
+
+};
+
+export {renderApp};

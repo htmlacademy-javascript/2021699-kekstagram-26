@@ -1,7 +1,7 @@
 import { renderBigPicture } from './render-big-picture.js';
 
 const pictureListElement = document.querySelector('.pictures');
-const pictureTemplate = document.querySelector('#picture').content;
+const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const renderPictures = (pictures) => {
   const pictureListFragment = document.createDocumentFragment();

@@ -1,8 +1,10 @@
-import { getData } from './api.js';
-import {renderPictures} from './render-picture.js';
+import { getData} from './api.js';
 import {initValidation} from './user-form.js';
-// import {filterPictures} from './filter.js';
+import {renderApp} from './filter.js';
 import {showAlert} from './util.js';
-initValidation();
+import './avatar.js';
 
-getData((pictures) =>{renderPictures(pictures);},showAlert);
+initValidation();
+getData(renderApp, showAlert);
+
+
