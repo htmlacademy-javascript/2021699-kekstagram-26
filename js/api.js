@@ -1,3 +1,5 @@
+import { unblockSubmitButton } from './user-form.js';
+
 const API_URL = 'https://26.javascript.pages.academy/kekstagram';
 const sendErrorMessage = 'Не удалось загрузить. Попробуйте снова';
 const getErrorMessage = 'Не удалось загрузить фотографии';
@@ -21,7 +23,7 @@ const getData = (onSuccess, onFail) => {
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(
-    `${API_URL}`,
+    ('https://26.javascript.pages.academy/kekstagra'),
     {
       method: 'POST',
       body,
@@ -35,6 +37,9 @@ const sendData = (onSuccess, onFail, body) => {
     })
     .catch((err) => {
       onFail(err.message);
+    })
+    .finally(() => {
+      unblockSubmitButton();
     });
 };
 

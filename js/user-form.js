@@ -1,6 +1,7 @@
 import { sendData } from './api.js';
 import { scaleControlPhoto, checkoutEffects, resetScale } from './slider.js';
 import { showAlert } from './util.js';
+import { sendBugMessage, sendSuccessMessage} from './messages.js';
 
 const fileUploadControl = document.querySelector('#upload-file');
 const form = document.querySelector('.img-upload__form');
@@ -17,7 +18,7 @@ const HASHTAGS_REGEX = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
 const hashtagError = {
   COUNT: 'Не больше 5 хэштегов',
   REPEAT: 'Повтор хештегов',
-  MAXSYMBOLS: 'Хештег должен начинаться с решетки, макс 20 символов'
+  MAX_SYMBOLS: 'Хештег должен начинаться с решетки, макс 20 символов'
 };
 
 const commentError = {
@@ -73,7 +74,7 @@ const initValidation = () => {
 
   pristine.addValidator(hashtagsInput,
     (hashtags) => hashtags === ''|| preparedHashtags(hashtagsInput.value).every((value) => HASHTAGS_REGEX.test(value)),
-    hashtagError.MAXSYMBOLS);
+    hashtagError.MAX_SYMBOLS);
 
   pristine.addValidator(hashtagsInput,
     (hashtags) => preparedHashtags(hashtags).length <= maxNumbersHashtags,
@@ -99,50 +100,21 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Сохранить';
 };
 
-const onSuccessMessage = () => {
-  const successTemplate = document.querySelector('#success').content.querySelector('.success');
-  const successElement = successTemplate.cloneNode(true);
-  document.body.append(successElement);
-
-  successElement.addEventListener('click', () => successElement.remove());
-  document.addEventListener('keydown',  (evt) =>{
-    if (evt.key === 'Escape') {
-      successElement.remove();
-    }
-  }
-  );
-};
-
-const onFailMessage = () => {
-  const failTemplate = document.querySelector('#error').content.querySelector('.error');
-  const failElement = failTemplate.cloneNode(true);
-  document.body.append(failElement);
-
-  failElement.addEventListener('click', () => failElement.remove());
-  document.addEventListener('keydown',  (evt) =>{
-    if (evt.key === 'Escape') {
-      failElement.remove();
-    }
-  }
-  );
-};
 const setUserFormSubmit = (onSuccess) => {
   form.addEventListener('submit', (evt) => {
-    const isValid = pristine.validate();
     evt.preventDefault();
-    if(isValid){
-      evt.preventDefault();
+    const isValid = pristine.validate();
+
+    if (isValid) {
       blockSubmitButton();
       sendData(
         () => {
           onSuccess();
-          unblockSubmitButton();
-          onSuccessMessage();
+          sendSuccessMessage();
         },
         () => {
           showAlert('Не удалось отправить форму. Попробуйте ещё раз');
-          onFailMessage();
-          unblockSubmitButton();
+          sendBugMessage();
         },
         new FormData(evt.target),
       );
@@ -151,4 +123,4 @@ const setUserFormSubmit = (onSuccess) => {
 };
 setUserFormSubmit(closeForm);
 
-export {initValidation};
+export {initValidation, unblockSubmitButton };
