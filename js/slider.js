@@ -1,93 +1,111 @@
-const previewImg = document.querySelector('.img-upload__preview');
-const buttonPlus = document.querySelector('.scale__control--bigger');
-const buttonMinus = document.querySelector('.scale__control--smaller');
-const sliderElement = document.querySelector('.effect-level__slider');
-const valueElement = document.querySelector('.effect-level__value');
-const specialElements = document.querySelectorAll('.effects__radio');
+const form =  document.querySelector('.img-upload__form');
+const previewImg = form.querySelector('.img-upload__preview img');
+const scalePositive = form.querySelector('.scale__control--bigger');
+const scaleNegative = form.querySelector('.scale__control--smaller');
+const sliderElement = form.querySelector('.effect-level__slider');
+const sliderHidden = form.querySelector('.img-upload__effect-level');
+const valueElement = form.querySelector('.effect-level__value');
+const specialElements = form.querySelectorAll('.effects__radio');
+const scaleField = form.querySelector('.scale__control--value');
 
-const scallerControlPhoto = () => {
-  const field = document.querySelector('.scale__control--value');
-  let fieldValue = field.value;
-  fieldValue = 100;
-  buttonMinus.addEventListener('click', () => {
-    if (fieldValue > 25) {
-      fieldValue -= 25;
-      field.value = fieldValue;
-      transform(fieldValue * 0.01);
-    }
-
-  });
-  buttonPlus.addEventListener('click', () => {
-    if (fieldValue < 100) {
-      fieldValue += 25;
-      field.value = fieldValue;
-      transform(fieldValue * 0.01);
-    }
-  });
-};
-
-function transform (value) {
-  previewImg.style.transform = `scale(${value})`;
-}
-
-const effectValues = [
-  { name:'effect-none',
+const SCALE_STEP = 25;
+const INITIAL_SCALE_VALUE = 100;
+const EFFECTS_DATA = [
+  {
+    name: 'effect-none',
     style: 'none',
-    min:0,
-    max:0,
-    step:0.1,
-    start:0,
-    unit:''
+    min: 0,
+    max: 0,
+    step: 0.1,
+    start: 0,
+    unit: ''
   },
-  { name:'effect-chrome',
+  {
+    name: 'effect-chrome',
     style: 'grayscale',
-    min:0,
-    max:1,
-    step:0.1,
-    start:1,
-    unit:''
+    min: 0,
+    max: 1,
+    step: 0.1,
+    start: 1,
+    unit: ''
   },
-  { name:'effect-sepia',
+  {
+    name: 'effect-sepia',
     style: 'sepia',
-    min:0,
-    max:1,
-    step:0.1,
-    start:1,
-    unit:'none'
-  },
-  { name:'effect-marvin',
-    style: 'invert',
-    min:0,
-    max:100,
-    step:1,
-    start:100,
-    unit:'%'
-  },
-  { name:'effect-phobos',
-    style:'blur',
-    min:0,
-    max:3,
-    step:0.1,
-    start:3,
-    unit:'px'
-  },
-  { name:'effect-heat',
-    style: 'brightness',
-    min:1,
-    max:3,
-    step:0.1,
-    start:3,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    start: 1,
     unit:''
+  },
+  {
+    name: 'effect-marvin',
+    style: 'invert',
+    min: 0,
+    max: 100,
+    step: 1,
+    start: 100,
+    unit: '%'
+  },
+  {
+    name: 'effect-phobos',
+    style: 'blur',
+    min: 0,
+    max: 3,
+    step: 0.1,
+    start: 3,
+    unit: 'px'
+  },
+  {
+    name: 'effect-heat',
+    style: 'brightness',
+    min: 1,
+    max: 3,
+    step: 0.1,
+    start: 3,
+    unit: ''
   }
 ];
 
-const defaultFilter = effectValues[0];
+const transform = (value) => {
+  previewImg.style.transform = `scale(${value * 0.01})`;
+};
+
+const scaleControlPhoto = () => {
+
+  let fieldValue = scaleField.value;
+  fieldValue = INITIAL_SCALE_VALUE;
+  scaleNegative.addEventListener('click', () => {
+    if (fieldValue > SCALE_STEP) {
+      fieldValue -= SCALE_STEP;
+      scaleField.value = `${fieldValue}%`;
+      transform(fieldValue);
+    }
+
+  });
+
+  scalePositive.addEventListener('click', () => {
+    if (fieldValue < INITIAL_SCALE_VALUE) {
+      fieldValue += SCALE_STEP;
+      scaleField.value = `${fieldValue}%`;
+      transform(fieldValue);
+    }
+
+  });
+};
+
+const resetScale = () => {
+  scaleField.value = `${INITIAL_SCALE_VALUE}%`;
+  transform(INITIAL_SCALE_VALUE);
+
+};
+const defaultFilter = EFFECTS_DATA[0];
 let chosenEffect = defaultFilter;
 
 const isDefault = () => chosenEffect === defaultFilter;
 
-const upDateslider = () => {
-  sliderElement.classList.remove('hidden');
+const updateSlider = () => {
+  sliderHidden.classList.remove('hidden');
   sliderElement.noUiSlider.updateOptions({
     range: {
       min: chosenEffect.min,
@@ -97,29 +115,31 @@ const upDateslider = () => {
     start: chosenEffect.start,
   });
 
-
-  if(isDefault())
-  {sliderElement.classList.add('hidden');
+  if (isDefault()) {
+    sliderHidden.classList.add('hidden');
   }
 };
 
 
-const currentEffect = (evt) =>{
-  if(!evt.target.id)
-  {return;
+const onEffectChange = (evt) =>{
+  if (!evt.target.id) {
+    return;
   }
-  const currentEffectData = effectValues.find((item) => item.name === evt.target.id);
+
+  const currentEffectData = EFFECTS_DATA.find((item) => item.name === evt.target.id);
   chosenEffect = currentEffectData;
-  upDateslider();
+  updateSlider();
 };
 
 const onSliderUpdate = () => {
   previewImg.style.filter = 'none';
   previewImg.className = '';
   valueElement.value = '';
-  if (isDefault()){
+
+  if (isDefault()) {
     return;
   }
+
   const sliderValue = sliderElement.noUiSlider.get();
   previewImg.style.filter = `${chosenEffect.style}(${sliderValue}${chosenEffect.unit})`;
   previewImg.classList.add(`effects__preview--${chosenEffect.name}`);
@@ -129,7 +149,7 @@ const onSliderUpdate = () => {
 
 const checkoutEffects = () => {
   chosenEffect = defaultFilter;
-  upDateslider();
+  updateSlider();
 };
 
 noUiSlider.create(sliderElement, {
@@ -143,8 +163,8 @@ noUiSlider.create(sliderElement, {
 });
 
 specialElements.forEach((item) => {
-  item.addEventListener('change', currentEffect);
+  item.addEventListener('change', onEffectChange);
 });
 sliderElement.noUiSlider.on('update', onSliderUpdate);
 
-export {scallerControlPhoto, checkoutEffects};
+export {scaleControlPhoto, checkoutEffects, resetScale};
