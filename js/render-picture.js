@@ -11,7 +11,7 @@ const renderPictures = (pictures) => {
 
     pictureElement.querySelector('.picture__img').src = photo.url;
     pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
-    pictureElement.querySelector('.picture__likes').textContent = photo.likes.length;
+    pictureElement.querySelector('.picture__likes').textContent = photo.likes;
     pictureElement.querySelector('.picture__img').dataset.id = photo.id;
     pictureListFragment.appendChild(pictureElement);
 

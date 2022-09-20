@@ -1,7 +1,7 @@
 import { sendData } from './api.js';
 import { scaleControlPhoto, checkoutEffects, resetScale } from './slider.js';
 import { showAlert } from './util.js';
-import { sendBugMessage, sendSuccessMessage} from './messages.js';
+import { renderSuccessMessage, renderErrorMessage} from './messages.js';
 
 const fileUploadControl = document.querySelector('#upload-file');
 const form = document.querySelector('.img-upload__form');
@@ -110,11 +110,11 @@ const setUserFormSubmit = (onSuccess) => {
       sendData(
         () => {
           onSuccess();
-          sendSuccessMessage();
+          renderSuccessMessage();
         },
         () => {
           showAlert('Не удалось отправить форму. Попробуйте ещё раз');
-          sendBugMessage();
+          renderErrorMessage();
         },
         new FormData(evt.target),
       );

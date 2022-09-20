@@ -1,13 +1,16 @@
 const popup = document.querySelector('.big-picture');
 const commentCount = document.querySelector('.social__comment-count');
-const commentCountSlice = commentCount.querySelector('.comments-count__slice');
+const commentsCount = commentCount.querySelector('.comments-count');
+const commentCountSlice = document.querySelector('.comments-count__slice');
 const commentsContainer = popup.querySelector('.social__comments');
 const сloseButton = popup.querySelector('#picture-cancel');
 const uploadButton = popup.querySelector('.comments-loader');
 
-const displayedComments = 5;
+const COMMENTS_DISPLAY_STEP = 5;
+let displayedComments = COMMENTS_DISPLAY_STEP;
 
 const closeModal = () => {
+  displayedComments = COMMENTS_DISPLAY_STEP;
   popup.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeyDown);
@@ -16,6 +19,7 @@ const closeModal = () => {
 const openModal = () => {
   popup.classList.remove('hidden');
   document.body.classList.add('modal-open');
+  uploadButton.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentKeyDown);
   сloseButton.addEventListener('click', () => closeModal());
 };
@@ -55,50 +59,52 @@ const createComments = (comments) => {
   commentsContainer.appendChild(fragment);
 };
 
+const onClickAddComments = (commentList) => {
+  if (commentList.length <= displayedComments) {
+    uploadButton.classList.add('hidden');
+    commentCountSlice.textContent=commentList.length;
+  } else {
+    displayedComments +=COMMENTS_DISPLAY_STEP;
+    commentList.slice(displayedComments);
+    commentCountSlice.textContent=displayedComments;
+  }
+  createComments(commentList);
+};
+
+
+const renderComents = (commentList) => {
+  const copyCommentsList = commentList.slice();
+  commentsContainer.innerHTML = '';
+
+
+  commentsCount.textContent=commentList.length;
+  const renderPictureComments = () => {
+    onClickAddComments(copyCommentsList);
+  };
+
+
+  if (commentList.length <= COMMENTS_DISPLAY_STEP) {
+    uploadButton.classList.add('hidden');
+    commentCountSlice.textContent=copyCommentsList.length;
+    createComments(copyCommentsList);
+  } else {
+    commentCountSlice.textContent=COMMENTS_DISPLAY_STEP;
+    uploadButton.classList.remove('hidden');
+    uploadButton.addEventListener('click', renderPictureComments, {once:true});
+  }
+};
+
 const renderBigPicture = (photo) => {
   popup.querySelector('.big-picture__img').querySelector('img').src = photo.url;
   popup.querySelector('.social__caption').textContent = photo.description;
-  popup.querySelector('.likes-count').textContent = photo.likes;
+  popup.querySelector('.likes-count').textContent = String(photo.likes);
   popup.querySelector('.comments-count').textContent = String(photo.comments.length);
 
   popup.querySelector('.social__comments').innerHTML = '';
 
-  addMoreComents(photo.comments);
+  renderComents(photo.comments);
 
   openModal();
 };
-
-const onClickAddComments = (commentList) => {
-  uploadButton.addEventListener('click', () => {
-    if (commentList.length <= displayedComments) {
-      uploadButton.classList.add('hidden');
-      commentCount.textContent = String(Number(commentCountSlice.textContent) + commentList.length);
-      uploadButton.removeEventListener('click', addMoreComents);
-    } else {
-      commentCount.textContent = String(Number(commentCountSlice.textContent) + displayedComments);
-    }
-    createComments(commentList.splice(0, displayedComments));
-  });
-};
-
-function addMoreComents (commentList) {
-  const copyCommentsList = commentList.slice();
-  commentsContainer.innerHTML = '';
-
-  onClickAddComments(copyCommentsList);
-
-  const totalcomments = commentList.length;
-
-  if (totalcomments <= displayedComments) {
-    uploadButton.classList.add('hidden');
-    createComments(copyCommentsList);
-    commentCountSlice.textContent = String(totalcomments);
-  } else {
-    commentCountSlice.textContent = String(displayedComments);
-    uploadButton.classList.remove('hidden');
-    createComments(copyCommentsList.splice(0, displayedComments));
-  }
-}
-
 
 export {renderBigPicture, closeModal};

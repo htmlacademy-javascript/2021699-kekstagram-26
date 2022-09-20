@@ -6,68 +6,42 @@ const failTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
 
-const closeSuccessMessage = () => {
-  const successContainer = document.querySelector('.success');
 
-  document.removeEventListener('keydown',   closeMessageForEscKeydown);
-  successContainer.removeEventListener('click', closeSuccessMessage);
-  successContainer.remove();
-};
+const renderPopupInfo = (node, messageContainer) => {
+  document.body.append(node);
 
-function closeMessageForEscKeydown(evt) {
-  if (evt.key === 'Escape') {
-    closeSuccessMessage();
-  }
-}
+  const onClose = () => {
+    document.removeEventListener('keydown',   onDocumentKeyDown);
+    node.remove();
+  };
 
-const closeBugMessage = () => {
-  const errorContainer = document.querySelector('.error');
-
-  document.removeEventListener('keydown',   closeBugMessageForEscKeydown);
-  errorContainer.removeEventListener('click', closeBugMessage);
-  errorContainer.remove();
-};
-
-function closeBugMessageForEscKeydown(evt) {
-  if (evt.key === 'Escape') {
-    closeBugMessage();
-  }
-}
-
-const sendSuccessMessage = () => {
-  const successElement = successTemplate.cloneNode(true);
-  document.body.append(successElement);
-
-  const buttonMessage = document.querySelector('.success__button');
-  const successContainer = document.querySelector('.success');
-
-  buttonMessage.addEventListener('click', closeSuccessMessage, {once:true});
-  document.addEventListener('keydown',   closeMessageForEscKeydown);
-  successContainer.addEventListener('click', (evt) => {
-    if (evt.target !== successContainer) {
-      return evt;
+  function onDocumentKeyDown (evt) {
+    if (evt.key === 'Escape') {
+      onClose();
     }
-    closeSuccessMessage();
-  });
-};
+  }
 
-const sendBugMessage = () => {
-  const failElement = failTemplate.cloneNode(true);
-  document.body.append(failElement);
-
-  const error = document.querySelector('.error');
-  error.style.zIndex = '100';
-  const buttonBugMessage = document.querySelector('.error__button');
-
-  buttonBugMessage.addEventListener('click', closeBugMessage, {once:true});
-  document.addEventListener('keydown',   closeBugMessageForEscKeydown);
-  error.addEventListener('click', (evt) => {
-    if (evt.target !== error) {
-      return evt;
+  const onNodeClick = (evt) => {
+    if (evt.target === messageContainer) {
+      return;
     }
-    closeBugMessage();
-  });
+    onClose();
+  };
+
+  node.addEventListener('click', onNodeClick);
+  document.addEventListener('keydown',   onDocumentKeyDown);
 };
 
 
-export {sendSuccessMessage, sendBugMessage};
+const renderSuccessMessage = () => {
+  const node = successTemplate.cloneNode(true);
+  const messageContainer = node.querySelector('.success__inner');
+  renderPopupInfo(node, messageContainer);
+};
+
+const renderErrorMessage = () => {
+  const node = failTemplate.cloneNode(true);
+  const messageContainer = node.querySelector('.error__inner');
+  renderPopupInfo(node, messageContainer);
+};
+export {renderSuccessMessage, renderErrorMessage};
